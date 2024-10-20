@@ -163,3 +163,7 @@ cython_debug/
 
 # info
 README_INFO.txt
+
+# poetry
+poetry.lock
+pyproject.toml

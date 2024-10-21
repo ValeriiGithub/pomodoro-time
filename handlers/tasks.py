@@ -1,8 +1,12 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/task",
                    tags=["task"])
 
+class Task(BaseModel):
+    name: str
+    pomodoro_count: int
 
 @router.get("/all")
 async def get_tasks():
@@ -10,8 +14,8 @@ async def get_tasks():
 
 
 @router.post("/")
-async def create_task():
-    return {"text": "task created"}
+async def create_task(body: Task):
+    return {"text": body}
 
 
 tasks = []

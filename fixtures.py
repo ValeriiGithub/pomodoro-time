@@ -1,4 +1,4 @@
-[
+tasks = [
     {
         "name": "task 1",
         "pomodoro_count": 10,

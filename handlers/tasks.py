@@ -1,16 +1,19 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+
+from fixtures import tasks as fixture_tasks
+from schema.task import Task
+
 
 router = APIRouter(prefix="/task",
                    tags=["task"])
 
-class Task(BaseModel):
-    name: str
-    pomodoro_count: int
 
-@router.get("/all")
+@router.get(
+    "/all",
+    response_model=list[Task]
+)
 async def get_tasks():
-    return {"message": "ok"}
+    return fixture_tasks
 
 
 @router.post("/")
@@ -18,24 +21,24 @@ async def create_task(body: Task):
     return {"text": body}
 
 
-tasks = []
+# tasks = []
 
 
 @router.post("/{task_id}")
-def create_task(task_id: int):
+async def create_task(task_id: int):
     """
     Создает новую задачу с указанным task_id.
     """
-    tasks.append(task_id)
+    # tasks.append(task_id)
     return {"message": f"Задача с id {task_id} создана."}
 
 
-@router.get("/tasks")
-def get_tasks():
-    """
-    Возвращает список всех созданных задач.
-    """
-    return {"tasks": tasks}
+# @router.get("/tasks")
+# async def get_tasks():
+#     """
+#     Возвращает список всех созданных задач.
+#     """
+#     return {"tasks": tasks}
 
 @router.put("/{task_id}")
 async def update_task(task_id: int):

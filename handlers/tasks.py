@@ -17,8 +17,9 @@ async def get_tasks():
 
 
 @router.post("/")
-async def create_task(body: Task):
-    return {"text": body}
+async def create_task(task: Task):
+    fixture_tasks.append(task)
+    return task
 
 
 # tasks = []

@@ -3,14 +3,10 @@ from fastapi import APIRouter, status
 from fixtures import tasks as fixture_tasks
 from schema.task import Task
 
-router = APIRouter(prefix="/task",
-                   tags=["task"])
+router = APIRouter(prefix="/task", tags=["task"])
 
 
-@router.get(
-    "/all",
-    response_model=list[Task]
-)
+@router.get("/all", response_model=list[Task])
 async def get_tasks():
     """
     Возвращает список всех созданных задач.
@@ -18,10 +14,7 @@ async def get_tasks():
     return fixture_tasks
 
 
-@router.post(
-    "/",
-    response_model=Task
-)
+@router.post("/", response_model=Task)
 async def create_task(task: Task):
     """
     Создает новую задачу с указанным task_id.

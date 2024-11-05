@@ -2,12 +2,12 @@ tasks = [
     {
         "id": 1,
         "name": "task 1",
-        "pomodoro_count": 10,
+        "pomodoro_count": None,
         "category_id": 1,
     },
     {
         "id": 2,
-        "name": "task 2",
+        "name": None,
         "pomodoro_count": 10,
         "category_id": 2,
     },

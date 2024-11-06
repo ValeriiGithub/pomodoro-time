@@ -1,7 +1,6 @@
 from fastapi import APIRouter, status
 
 from database import get_db_connection
-from fixtures import tasks as fixture_tasks
 from schema.task import Task
 
 router = APIRouter(prefix="/task", tags=["task"])

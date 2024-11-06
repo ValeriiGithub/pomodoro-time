@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from settings import Settings
+from settings import settings
 
 router = APIRouter(prefix="/ping",
                    tags=["ping"])
@@ -8,7 +8,6 @@ router = APIRouter(prefix="/ping",
 
 @router.get("/ping")
 async def ping():
-    settings = Settings()
     return {"message": settings}
 
 @router.get("/db")

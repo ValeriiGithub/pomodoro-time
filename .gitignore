@@ -172,3 +172,6 @@ pyproject.toml
 .local.env
 .dev.env
 .prod.env
+
+# bd
+pomodoro.sqlite

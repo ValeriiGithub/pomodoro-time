@@ -9,7 +9,7 @@ class Task(BaseModel):
 
     @model_validator(mode='after')
     def check_name_is_not_none(self):
-        print(self)
+        # print(self)
         if self.name is None and self.pomodoro_count is None:
             raise ValueError('Task name and pomodoro count cannot be both None')
         return self

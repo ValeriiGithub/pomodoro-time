@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status
 
+from database import get_db_connection
 from fixtures import tasks as fixture_tasks
 from schema.task import Task
 
@@ -11,7 +12,20 @@ async def get_tasks():
     """
     Возвращает список всех созданных задач.
     """
-    return fixture_tasks
+    result: list[Task] = []
+    cursor = get_db_connection().cursor()
+    tasks = cursor.execute("SELECT * FROM Tasks").fetchall()        # tasks=[(1, 'test 1', 10, 1), (2, 'test 2', 10, 2), (3, 'test 3', 10, 3)]
+    # распарсим tuple
+    for task in tasks:
+        result.append(Task(
+            id=task[0],
+            name=task[1],
+            pomodoro_count=task[2],
+            category_id=task[3],  # category_id=Category(id=task[3], name=get_category_name(task[3]))  # Заменить на получение имени категории из БД
+        ))
+
+    # print(f"{result=}")
+    return result
 
 
 @router.post("/", response_model=Task)

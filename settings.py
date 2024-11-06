@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    GOOGLE_TOKEN_ID: str = "dfjijj3409u309j49009r3ijf034jife"
+    sqlite_db_name: str = '/mnt/c/db/pomodoro.sqlite'
 
 
 # Инициализация экземпляра settings в файле settings.py и его импорт в

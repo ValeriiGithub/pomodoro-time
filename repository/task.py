@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
 from database import Task, get_db_session
@@ -23,16 +23,34 @@ class TaskRepository:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
-    def get_task(self, task_id):
+    def get_tasks(self):
+        query = select([Task])
+        with self.db_session as session:
+            tasks: list[Task] = session.execute(query).scalars().all()
+            if tasks is None:
+                raise ValueError("No tasks found")
+            return tasks
+
+    def get_task(self, task_id: int) -> Task | None:
         query = select([Task]).where(Task.id == task_id)
-        with self.db_session() as session:
-            task = session.execute(query).fetchone()
-            if task is None:
-                raise ValueError(f"Task with id {task_id} not found")
+        with self.db_session as session:
+            # task = session.execute(query).fetchone()
+            # task = session.execute(query).scalars().first()        # Said
+            task: Task = session.execute(query).scalar_one_or_none()  # Said
+            # if task is None:
+            #     raise ValueError(f"Task with id {task_id} not found")
             return task
 
-    def get_tasks(self):
-        pass
+    def create_task(self, task: Task) -> None:
+        with self.db_session as session:
+            session.add(task)
+            session.commit()
+
+    def delete_task(self, task_id: int) -> None:
+        query = delete(Task).where(Task.id == task_id)
+        with self.db_session as session:
+            session.execute(query)
+            session.commit()
 
 
 # Dependency

@@ -1,15 +1,15 @@
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
-from database import Task, get_db_session
+from database import Tasks, get_db_session
 
 
 class TaskRepository:
     """
     TaskRepository класс:
-        Этот класс отвечает за взаимодействие с базой данных для работы с задачами (Task).
+        Этот класс отвечает за взаимодействие с базой данных для работы с задачами (Tasks).
         Он принимает в конструкторе объект Session из SQLAlchemy, который представляет соединение с базой данных.
-        Метод get_task(self, task_id) возвращает задачу (Task) по ее идентификатору. Если задача не найдена, он генерирует исключение ValueError.
+        Метод get_task(self, task_id) возвращает задачу (Tasks) по ее идентификатору. Если задача не найдена, он генерирует исключение ValueError.
         Метод get_tasks(self) (который пока пуст) должен возвращать список всех задач.
 
     get_task_repository() функция:
@@ -24,30 +24,30 @@ class TaskRepository:
         self.db_session = db_session
 
     def get_tasks(self):
-        query = select([Task])
+        query = select([Tasks])
         with self.db_session as session:
-            tasks: list[Task] = session.execute(query).scalars().all()
+            tasks: list[Tasks] = session.execute(query).scalars().all()
             if tasks is None:
                 raise ValueError("No tasks found")
             return tasks
 
-    def get_task(self, task_id: int) -> Task | None:
-        query = select([Task]).where(Task.id == task_id)
+    def get_task(self, task_id: int) -> Tasks | None:
+        query = select([Tasks]).where(Tasks.id == task_id)
         with self.db_session as session:
             # task = session.execute(query).fetchone()
             # task = session.execute(query).scalars().first()        # Said
-            task: Task = session.execute(query).scalar_one_or_none()  # Said
+            task: Tasks = session.execute(query).scalar_one_or_none()  # Said
             # if task is None:
-            #     raise ValueError(f"Task with id {task_id} not found")
+            #     raise ValueError(f"Tasks with id {task_id} not found")
             return task
 
-    def create_task(self, task: Task) -> None:
+    def create_task(self, task: Tasks) -> None:
         with self.db_session as session:
             session.add(task)
             session.commit()
 
     def delete_task(self, task_id: int) -> None:
-        query = delete(Task).where(Task.id == task_id)
+        query = delete(Tasks).where(Tasks.id == task_id)
         with self.db_session as session:
             session.execute(query)
             session.commit()

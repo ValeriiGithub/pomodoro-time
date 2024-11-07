@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 Base = declarative_base()
 
 
-class Task(Base):
+class Tasks(Base):
     __tablename__ = 'Tasks'
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -12,7 +12,7 @@ class Task(Base):
     category_id: Mapped[int] = Mapped(foreign_key='categories.id')
 
 
-class Category(Base):
+class Categories(Base):
     __tablename__ = 'Categories'
 
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -16,4 +16,4 @@ class Categories(Base):
     __tablename__ = 'Categories'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = Mapped()
+    name: Mapped[str] = mapped_column()

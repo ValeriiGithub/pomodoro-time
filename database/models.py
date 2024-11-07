@@ -7,9 +7,9 @@ class Tasks(Base):
     __tablename__ = 'Tasks'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column()
-    pomodoro_count: Mapped[int] = mapped_column()
-    category_id: Mapped[int] = mapped_column()
+    name: Mapped[str]
+    pomodoro_count: Mapped[int]
+    category_id: Mapped[int]
 
 
 class Categories(Base):
@@ -17,4 +17,4 @@ class Categories(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     type: Mapped[str] = mapped_column()
-    name: Mapped[str] = mapped_column()
+    name: Mapped[str]

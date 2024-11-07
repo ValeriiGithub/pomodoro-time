@@ -9,7 +9,7 @@ class Tasks(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     pomodoro_count: Mapped[int] = mapped_column()
-    category_id: Mapped[int] = mapped_column(foreign_key='Categories.id')
+    category_id: Mapped[int] = mapped_column()
 
 
 class Categories(Base):

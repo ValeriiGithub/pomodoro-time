@@ -1,7 +1,7 @@
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
-from database import Tasks, get_db_session
+from database import Tasks, Categories, get_db_session
 
 
 class TaskRepository:
@@ -51,6 +51,14 @@ class TaskRepository:
         with self.db_session as session:
             session.execute(query)
             session.commit()
+
+    def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
+        query = select(Tasks).join(Categories).where(Categories.name == category_name)
+        with self.db_session as session:
+            tasks: list[Tasks] = session.execute(query).scalars().all()
+            if not tasks:
+                raise ValueError(f"No tasks found for category '{category_name}'")
+            return tasks
 
 
 # Dependency

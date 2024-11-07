@@ -24,41 +24,77 @@ class TaskRepository:
         self.db_session = db_session
 
     def get_tasks(self):
-        query = select([Tasks])
-        with self.db_session as session:
+
+        with self.db_session() as session:
+            query = select(Tasks)
             tasks: list[Tasks] = session.execute(query).scalars().all()
             if tasks is None:
                 raise ValueError("No tasks found")
             return tasks
 
     def get_task(self, task_id: int) -> Tasks | None:
-        query = select([Tasks]).where(Tasks.id == task_id)
-        with self.db_session as session:
-            # task = session.execute(query).fetchone()
-            # task = session.execute(query).scalars().first()        # Said
-            task: Tasks = session.execute(query).scalar_one_or_none()  # Said
-            # if task is None:
-            #     raise ValueError(f"Tasks with id {task_id} not found")
+        with self.db_session() as session:
+            query = select(Tasks).where(Tasks.id == task_id)
+            task: Tasks = session.execute(query).scalar_one_or_none()
             return task
 
     def create_task(self, task: Tasks) -> None:
-        with self.db_session as session:
+        with self.db_session() as session:
             session.add(task)
             session.commit()
 
     def delete_task(self, task_id: int) -> None:
-        query = delete(Tasks).where(Tasks.id == task_id)
-        with self.db_session as session:
+        with self.db_session() as session:
+            query = delete(Tasks).where(Tasks.id == task_id)
             session.execute(query)
             session.commit()
 
     def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
-        query = select(Tasks).join(Categories).where(Categories.name == category_name)
-        with self.db_session as session:
-            tasks: list[Tasks] = session.execute(query).scalars().all()
+        with self.db_session() as session:
+            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
+                Categories.name == category_name)
+            tasks: list[Tasks] = query.all()
             if not tasks:
                 raise ValueError(f"No tasks found for category '{category_name}'")
             return tasks
+
+    # def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
+    #     query = select(Tasks).join(Categories, Tasks.category_id == Categories.id).where(Categories.name ==
+    #                                                                                      category_name)
+    #     with self.db_session as session:
+    #         tasks: list[Tasks] = session.execute(query).scalars().all()
+    #         if not tasks:
+    #             raise ValueError(f"No tasks found for category '{category_name}'")
+    #         return tasks
+
+    # def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
+    #     with self.db_session as session:
+    #         query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
+    #             Categories.name == category_name)
+    #         tasks: list[Tasks] = query.all()
+    #         if not tasks:
+    #             raise ValueError(f"No tasks found for category '{category_name}'")
+    #         return tasks
+
+    def get_tasks_by_category_name_2(self, category_name):
+        with self.db_session as session:
+            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(Categories.name == category_name)
+            tasks = query.all()
+            return [task for task in tasks]
+
+    def get_tasks_by_category_name_3(self, category_name):
+        """
+        работает
+        :param category_name:
+        :return:
+        """
+        session = self.db_session()
+        try:
+            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(Categories.name == category_name)
+            tasks = query.all()
+            return tasks
+        finally:
+            session.close()
 
 
 # Dependency
@@ -76,3 +112,30 @@ def get_task_repository() -> TaskRepository:
     """
     db_session = get_db_session()
     return TaskRepository(db_session)
+
+
+if __name__ == "__main__":
+    task_repo = get_task_repository()
+    print(task_repo)
+    print(task_repo.get_task(2))
+    print(task_repo.get_task(2).name)
+    print(len(task_repo.get_tasks()), task_repo.get_tasks())
+    print(task_repo.get_tasks_by_category_name("work"))
+    for i in range(2, 6):
+        print(task_repo.get_task(i).name)
+
+    task = task_repo.get_task(1)
+    print(dir(task))
+
+    task = task_repo.get_task(1)
+    print(task.__dir__)
+    task = task_repo.get_task(1)
+    print(task.__doc__)
+
+    # task = task_repo.get_task(1)
+    # print(vars(task))
+
+    import inspect
+
+    task = task_repo.get_task(1)
+    print(inspect.getmembers(task))

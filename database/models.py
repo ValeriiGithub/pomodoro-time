@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, declared_attr
 
@@ -24,17 +24,17 @@ class Base(DeclarativeBase):
 
 
 class Tasks(Base):
-    # __tablename__ = 'Tasks'
+    # __tablename__ = 'tasks'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     pomodoro_count: Mapped[int]
-    category_id: Mapped[int]
+    category_id: Mapped[int] = mapped_column(nullable=False)
 
 
 class Categories(Base):
-    # __tablename__ = 'Categories'
+    # __tablename__ = 'categories'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # type: Mapped[str] = mapped_column()
+    type: Mapped[Optional[str]]                                 # Необязательное поле
     name: Mapped[str]

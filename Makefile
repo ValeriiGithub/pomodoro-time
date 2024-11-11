@@ -3,6 +3,7 @@
 HOST ?= 0.0.0.0
 PORT ?= 8001
 ENV_FILE ?= .local.env
+REVISION ?= -1    ## Или идентификатор версии (например, `123456789abc`) base - вернуть базу данных в начальное состояние
 
 ## Poetry
 
@@ -22,6 +23,12 @@ uninstall: ## Uninstall a dependency using poetry
 migrate-create: ## Migrate a dependency using alembic
 	@echo "Create migration $(MIGRATION)"
 	alembic revision --autogenerate -m $(MIGRATION)
+
+migrate-apply: ## Migrate a dependency using alembic
+	alembic upgrade head
+
+migrate-downgrade: ## Откат миграции alembic
+	alembic downgrade $(REVISION)
 
 help: ## Show this help message
 	@echo "Usage: make [command]"

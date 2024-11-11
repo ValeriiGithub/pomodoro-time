@@ -4,6 +4,8 @@ HOST ?= 0.0.0.0
 PORT ?= 8001
 ENV_FILE ?= .local.env
 
+## Poetry
+
 run: ## Run the application using uvicorn with provided arguments or defaults
 	poetry run uvicorn main:app --host $(HOST) --port $(PORT) --reload --env-file $(ENV_FILE)
 
@@ -15,8 +17,16 @@ uninstall: ## Uninstall a dependency using poetry
 	@echo "Uninstalling dependency $(LIBRARY)"
 	poetry remove $(LIBRARY)
 
+## Alembic
+
+migrate-create: ## Migrate a dependency using alembic
+	@echo "Create migration $(MIGRATION)"
+	alembic revision --autogenerate -m $(MIGRATION)
+
 help: ## Show this help message
 	@echo "Usage: make [command]"
 	@echo ""
 	@echo "Commands: "
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+
+

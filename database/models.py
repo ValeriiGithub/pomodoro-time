@@ -1,6 +1,26 @@
-from sqlalchemy.orm import Mapped, mapped_column, declarative_base
+from typing import Any
 
-Base = declarative_base()
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, declared_attr
+
+
+class Base(DeclarativeBase):
+    """
+    Этот метод определяет имя таблицы в базе данных для каждой модели, наследуемой от Base.
+    Используя декоратор @declared_attr, вы можете динамически задавать имя таблицы на основе имени класса.
+    Например, если вы создаете класс Tasks, то имя таблицы будет автоматически установлено в 'tasks' (все буквы
+    в нижнем регистре). Это упрощает процесс именования таблиц и делает код более чистым.
+
+    Таким образом, этот блок кода создает основу для ваших моделей, обеспечивая автоматическое именование таблиц и позволяя
+    использовать классы, которые могут не иметь явных маппингов.
+    """
+    id: Any
+    __name__: str
+
+    __allow_unmapped__ = True
+
+    @declared_attr
+    def __tablename__(self) -> str:
+        return self.__name__.lower()
 
 
 class Tasks(Base):

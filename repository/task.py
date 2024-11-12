@@ -1,7 +1,8 @@
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
-from database import Tasks, Categories, get_db_session
+from database import Tasks, Categories
+from schema.task import TaskSchema
 
 
 class TaskRepository:
@@ -38,10 +39,12 @@ class TaskRepository:
             task: Tasks = session.execute(query).scalar_one_or_none()
             return task
 
-    def create_task(self, task: Tasks) -> None:
+    def create_task(self, task: TaskSchema) -> int:
+        task_model = Tasks(name=task.name, pomodoro_count=task.pomodoro_count, category_id=task.category_id)
         with self.db_session() as session:
-            session.add(task)
+            session.add(task_model)
             session.commit()
+            return task_model.id
 
     def delete_task(self, task_id: int) -> None:
         with self.db_session() as session:
@@ -78,7 +81,8 @@ class TaskRepository:
 
     def get_tasks_by_category_name_2(self, category_name):
         with self.db_session as session:
-            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(Categories.name == category_name)
+            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
+                Categories.name == category_name)
             tasks = query.all()
             return [task for task in tasks]
 
@@ -90,52 +94,9 @@ class TaskRepository:
         """
         session = self.db_session()
         try:
-            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(Categories.name == category_name)
+            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
+                Categories.name == category_name)
             tasks = query.all()
             return tasks
         finally:
             session.close()
-
-
-# Dependency
-def get_task_repository() -> TaskRepository:
-    """
-    Назначение функции get_task_repository():
-
-    Эта функция предоставляет единый точку доступа для получения экземпляра TaskRepository.
-    Она скрывает детали создания TaskRepository, такие, как получение объекта Session из базы данных.
-    Это позволяет легко заменить реализацию TaskRepository (например, если вы решите использовать другую базу данных или другой ORM) без необходимости изменять код, который использует TaskRepository.
-    Такой подход называется "внедрение зависимостей" (Dependency Injection) и помогает сделать код более модульным, тестируемым и гибким.
-
-    Таким образом, функция get_task_repository() играет важную роль в обеспечении правильного создания и использования TaskRepository в  приложении.
-    :return: TaskRepository
-    """
-    db_session = get_db_session()
-    return TaskRepository(db_session)
-
-
-if __name__ == "__main__":
-    task_repo = get_task_repository()
-    print(task_repo)
-    print(task_repo.get_task(2))
-    print(task_repo.get_task(2).name)
-    print(len(task_repo.get_tasks()), task_repo.get_tasks())
-    print(task_repo.get_tasks_by_category_name("work"))
-    for i in range(2, 6):
-        print(task_repo.get_task(i).name)
-
-    task = task_repo.get_task(1)
-    print(dir(task))
-
-    task = task_repo.get_task(1)
-    print(task.__dir__)
-    task = task_repo.get_task(1)
-    print(task.__doc__)
-
-    # task = task_repo.get_task(1)
-    # print(vars(task))
-
-    import inspect
-
-    task = task_repo.get_task(1)
-    print(inspect.getmembers(task))

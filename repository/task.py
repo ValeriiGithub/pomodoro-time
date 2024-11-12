@@ -78,4 +78,5 @@ class TaskRepository:
         query = update(Tasks).where(Tasks.id == task_id).values(name=name).returning(Tasks.id)
         with self.db_session() as session:
             task_id: int = session.execute(query).scalar_one_or_none()
+            session.commit()
             return self.get_task(task_id)

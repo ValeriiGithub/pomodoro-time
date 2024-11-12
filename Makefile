@@ -30,6 +30,11 @@ migrate-apply: ## Migrate a dependency using alembic
 migrate-downgrade: ## Откат миграции alembic
 	alembic downgrade $(REVISION)
 
+## docker
+
+docker-postgres: ## Docker a dependency using
+	docker-compose up -d	## Запуск postgres в тихом режиме
+
 help: ## Show this help message
 	@echo "Usage: make [command]"
 	@echo ""

@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # engine = create_engine('sqlite:///' + os.path.join(settings.project_root, settings.sqlite_db_name))
-engine = create_engine('sqlite:////mnt/c/db/pomodoro.sqlite')
-
+# engine = create_engine('sqlite:////mnt/c/db/pomodoro.sqlite')       # BD sqlite3
+engine = create_engine('postgresql+psycopg2://postgres:password@0.0.0.0:5432/pomodoro')       # BD postgresql
 """
 
 sqlite:///path/to/database.db

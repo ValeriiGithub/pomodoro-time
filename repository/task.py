@@ -1,4 +1,4 @@
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from sqlalchemy.orm import Session
 
 from database import Tasks, Categories
@@ -53,50 +53,29 @@ class TaskRepository:
             session.commit()
 
     def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
+        """
+        Получает список задач, которые принадлежат категории с указанным именем.
+
+        :param category_name: Имя категории
+        :return: Список задач
+        """
         with self.db_session() as session:
             query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
                 Categories.name == category_name)
-            tasks: list[Tasks] = query.all()
-            if not tasks:
+            task: list[Tasks] = query.all()
+            if not task:
                 raise ValueError(f"No tasks found for category '{category_name}'")
-            return tasks
+            return task
 
-    # def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
-    #     query = select(Tasks).join(Categories, Tasks.category_id == Categories.id).where(Categories.name ==
-    #                                                                                      category_name)
-    #     with self.db_session as session:
-    #         tasks: list[Tasks] = session.execute(query).scalars().all()
-    #         if not tasks:
-    #             raise ValueError(f"No tasks found for category '{category_name}'")
-    #         return tasks
+    # def get_task_by_category_name(self, category_name: str) -> list[Tasks]:
+    #     query = select(Tasks).join(Categories, Tasks.category_id == Categories.id).where(
+    #         Categories.name == category_name)
+    #     with self.db_session() as session:
+    #         task: list[Tasks] = session.execute(query).scalars().all()
+    #         return task
 
-    # def get_tasks_by_category_name(self, category_name: str) -> list[Tasks]:
-    #     with self.db_session as session:
-    #         query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
-    #             Categories.name == category_name)
-    #         tasks: list[Tasks] = query.all()
-    #         if not tasks:
-    #             raise ValueError(f"No tasks found for category '{category_name}'")
-    #         return tasks
-
-    def get_tasks_by_category_name_2(self, category_name):
-        with self.db_session as session:
-            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
-                Categories.name == category_name)
-            tasks = query.all()
-            return [task for task in tasks]
-
-    def get_tasks_by_category_name_3(self, category_name):
-        """
-        работает
-        :param category_name:
-        :return:
-        """
-        session = self.db_session()
-        try:
-            query = session.query(Tasks).join(Categories, Tasks.category_id == Categories.id).filter(
-                Categories.name == category_name)
-            tasks = query.all()
-            return tasks
-        finally:
-            session.close()
+    def update_task_name(self, task_id: int, name: str) -> Tasks:
+        query = update(Tasks).where(Tasks.id == task_id).values(name=name).returning(Tasks.id)
+        with self.db_session() as session:
+            task_id: int = session.execute(query).scalar_one_or_none()
+            return self.get_task(task_id)

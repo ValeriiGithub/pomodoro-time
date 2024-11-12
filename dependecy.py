@@ -3,7 +3,7 @@ from database import get_db_session
 from repository import TaskRepository
 
 
-def get_task_repository() -> TaskRepository:
+def get_tasks_repository() -> TaskRepository:
     """
     Назначение функции get_task_repository():
 

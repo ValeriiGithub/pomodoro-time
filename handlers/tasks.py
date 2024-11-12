@@ -61,9 +61,10 @@ async def delete_task(
         task_repository: Annotated[TaskRepository, Depends(get_tasks_repository)]
 ):
     """
-        Удаляет задачу с указанным task_id.
-        :param task_id:
-        :return:
-        """
+    Удаляет задачу с указанным task_id.
+    :param task_repository:
+    :param task_id:
+    :return:
+    """
     task_repository.delete_task(task_id)
     return {"message": "task deleted successfully"}

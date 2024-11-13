@@ -32,7 +32,7 @@ migrate-downgrade: ## Откат миграции alembic
 
 ## docker
 
-docker-postgres: ## Docker a dependency using
+docker-postgres-run: ## Docker a dependency using
 	docker-compose up -d	## Запуск postgres в тихом режиме
 
 help: ## Show this help message

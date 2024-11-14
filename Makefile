@@ -30,10 +30,12 @@ migrate-apply: ## Migrate a dependency using alembic
 migrate-downgrade: ## Откат миграции alembic
 	alembic downgrade $(REVISION)
 
-## docker
+## Docker
 
-docker-postgres-run: ## Docker a dependency using
+docker-run: ## Docker a dependency using
 	docker-compose up -d	## Запуск postgres в тихом режиме
+
+## Redis
 
 help: ## Show this help message
 	@echo "Usage: make [command]"

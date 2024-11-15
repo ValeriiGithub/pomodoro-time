@@ -12,7 +12,7 @@ run: ## Run the application using uvicorn with provided arguments or defaults
 
 install:  ## Install a dependency using poetry
 	@echo "Installing dependency $(LIBRARY)"
-	poetry add $(LIBRARY)
+	poetry add $(LIBRARY) && echo "LIBRARY added"
 
 uninstall: ## Uninstall a dependency using poetry
 	@echo "Uninstalling dependency $(LIBRARY)"

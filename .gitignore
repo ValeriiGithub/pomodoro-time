@@ -163,8 +163,6 @@ cython_debug/
 
 # info
 README_INFO.txt
-my_scripts
-my_scripts/
 
 # poetry
 #poetry.lock
@@ -177,3 +175,6 @@ pyproject.toml
 
 # bd
 pomodoro.sqlite
+
+# Игнорируем папку my_scripts и все ее содержимое
+my_scripts/

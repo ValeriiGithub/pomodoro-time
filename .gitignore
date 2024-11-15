@@ -163,6 +163,8 @@ cython_debug/
 
 # info
 README_INFO.txt
+my_scripts
+my_scripts/
 
 # poetry
 #poetry.lock

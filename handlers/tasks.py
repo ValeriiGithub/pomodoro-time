@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, status, Depends
 
 from schema.task import TaskSchema
-from repository import TaskRepository, TaskCache
+from repository import TaskRepository, TaskCacheRepository
 from dependecy import get_tasks_repository, get_tasks_cache_repository
 
 router = APIRouter(prefix="/task", tags=["task"])
@@ -15,14 +15,14 @@ router = APIRouter(prefix="/task", tags=["task"])
 )
 async def get_tasks(
         task_repository: Annotated[TaskRepository, Depends(get_tasks_repository)],
-        task_cache: Annotated[TaskCache, Depends(get_tasks_cache_repository)],
+        task_cache: Annotated[TaskCacheRepository, Depends(get_tasks_cache_repository)],
 ):
     """
     Возвращает список всех созданных задач.
     """
     tasks = task_repository.get_tasks()
     tasks_schema = [TaskSchema.model_validate(task) for task in tasks]
-    task_cache.set_tasks(tasks_schema)
+    task_cache.set_all_tasks(tasks_schema)
     return tasks
 
 

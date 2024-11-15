@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings
 
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 
 class Settings(BaseSettings):
     # sqlite_db_name: str = '/mnt/c/db/pomodoro.sqlite'
@@ -11,6 +14,3 @@ class Settings(BaseSettings):
 # экземпляра и гарантирует, что переменные окружения будут загружены только
 # один раз, что может быть более эффективно и удобно.
 settings = Settings()
-
-
-

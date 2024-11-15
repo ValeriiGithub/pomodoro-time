@@ -3,7 +3,7 @@ from redis import Redis
 from schema.task import TaskSchema
 
 
-class CacheTask:
+class TaskCache:
     def __init__(self, redis: Redis):
         self.redis = redis
 

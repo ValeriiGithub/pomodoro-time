@@ -6,7 +6,7 @@ from settings import settings
 # engine = create_engine('sqlite:////mnt/c/db/pomodoro.sqlite')       # BD sqlite3
 # engine = create_engine('postgresql+psycopg2://postgres:password@0.0.0.0:5432/pomodoro')       # BD postgresql
 # Используйте атрибут postgres_db_name для создания подключения
-engine = create_engine(settings.postgres_db_name)
+engine = create_engine(settings.db_url)
 
 """
 

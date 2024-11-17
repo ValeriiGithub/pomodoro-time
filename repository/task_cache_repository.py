@@ -9,7 +9,7 @@ class TaskCacheRepository:
     def __init__(self, redis: Redis):
         self.redis = redis
 
-    def get_all_tasks(self) -> list[TaskSchema]:
+    def get_tasks(self) -> list[TaskSchema]:
         with self.redis as redis:
             tasks_json = redis.lrange("tasks", 0, -1)
             return [TaskSchema.model_validate(json.loads(task)) for task in tasks_json]

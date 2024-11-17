@@ -1,11 +1,14 @@
+from dataclasses import dataclass
+
 from repository import TaskRepository, TaskCacheRepository
 from schema.task import TaskSchema
 
 
+@dataclass
 class TaskService:
-    def __init__(self, task_repository: TaskRepository, task_cache: TaskCacheRepository):
-        self.task_repository = task_repository
-        self.task_cache = task_cache
+    task_repository: TaskRepository
+    task_cache: TaskCacheRepository
+
 
     def get_tasks(self):
         if cache_task := self.task_cache.get_all_tasks():

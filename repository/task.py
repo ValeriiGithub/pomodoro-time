@@ -29,7 +29,7 @@ class TaskRepository:
         with self.db_session() as session:
             query = select(Tasks)
             tasks: list[Tasks] = session.execute(query).scalars().all()
-            if tasks is None:
+            if not tasks:
                 raise ValueError("No tasks found")
             return tasks
 

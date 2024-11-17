@@ -1,7 +1,8 @@
 # Dependency
 from database import get_db_session
 # from cache import get_redis_connection
-from cache import get_cache_session
+from cache import get_redis_connection
+# from cache import get_cache_session
 from repository import TaskRepository, TaskCacheRepository
 
 
@@ -20,10 +21,12 @@ def get_tasks_repository() -> TaskRepository:
     db_session = get_db_session()
     return TaskRepository(db_session)
 
+
 def get_tasks_cache_repository() -> TaskCacheRepository:
     """
     Получаем закешированные таски
     :return:
     """
-    redis_connection = get_cache_session()
+    redis_connection = get_redis_connection()
+    # redis_connection = get_cache_session()      # Асинхронное подключение
     return TaskCacheRepository(redis_connection)

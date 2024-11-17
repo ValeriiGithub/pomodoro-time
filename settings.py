@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     DB_NAME: str = 'pomodoro'
 
     # Redis settings
-    CACH_HOST: str = '0.0.0.0'
-    CACH_PORT: int = 6379
+    CACHE_HOST: str = '0.0.0.0'
+    CACHE_PORT: int = 6379
     CACHE_DB: int = 0
 
 

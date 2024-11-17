@@ -11,7 +11,7 @@ class TaskService:
 
 
     def get_tasks(self):
-        if cache_task := self.task_cache.get_all_tasks():
+        if cache_task := self.task_cache.get_tasks():
             return cache_task
         else:
             tasks = self.task_repository.get_tasks()

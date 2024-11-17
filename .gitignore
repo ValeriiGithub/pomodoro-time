@@ -168,8 +168,8 @@ README_INFO.txt
 #poetry.lock
 pyproject.toml
 
-# env
-.local.env
+# ignore all env
+*.local*
 .dev.env
 .prod.env
 

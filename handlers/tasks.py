@@ -20,13 +20,7 @@ async def get_tasks(
     """
     Возвращает список всех созданных задач.
     """
-    if cache_task := task_cache.get_all_tasks():
-        return cache_task
-    else:
-        tasks = task_repository.get_tasks()
-        tasks_schema = [TaskSchema.model_validate(task) for task in tasks]
-        task_cache.set_all_tasks(tasks_schema)
-        return task_cache
+    pass
 
 
 @router.post(

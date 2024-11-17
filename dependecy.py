@@ -4,6 +4,7 @@ from database import get_db_session
 from cache import get_redis_connection
 # from cache import get_cache_session
 from repository import TaskRepository, TaskCacheRepository
+from service import TaskService
 
 
 def get_tasks_repository() -> TaskRepository:
@@ -30,3 +31,13 @@ def get_tasks_cache_repository() -> TaskCacheRepository:
     redis_connection = get_redis_connection()
     # redis_connection = get_cache_session()      # Асинхронное подключение
     return TaskCacheRepository(redis_connection)
+
+def get_task_service() -> TaskService:
+    """
+    Получаем сервис для работы с тасками
+    :return:
+    """
+    return TaskService(
+        task_repository=get_tasks_repository(),
+        task_cache=get_tasks_cache_repository(),
+    )

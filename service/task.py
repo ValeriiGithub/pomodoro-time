@@ -13,5 +13,5 @@ class TaskService:
         else:
             tasks = self.task_repository.get_tasks()
             tasks_schema = [TaskSchema.model_validate(task) for task in tasks]
-            self.task_cache.set_all_tasks(tasks_schema)
+            self.task_cache.set_tasks(tasks_schema)
             return tasks_schema

@@ -9,19 +9,26 @@ class TaskCacheRepository:
     def __init__(self, redis: Redis):
         self.redis = redis
 
-    def get_all_tasks(self):
-        # with self.redis as redis:
-        #     return redis.lrange("tasks", 0, -1)
-        return self.redis.lrange("tasks", 0, -1)
+    def get_all_tasks(self) -> list[TaskSchema]:
+        with self.redis as redis:
+            tasks_json = redis.lrange("tasks", 0, -1)
+            return [TaskSchema.model_validate(json.loads(task)) for task in tasks_json]
 
-    def set_all_tasks(self, tasks: list[TaskSchema]):
-        # Преобразуем задачи в словари с помощью model_dump и затем в JSON
-        tasks_json = [json.dumps(task.model_dump()) for task in tasks]
-        # with self.redis as redis:
-        #     redis.lpush("tasks", *tasks_json)
-        self.redis.lpush("tasks", *tasks_json)  # Убираем with
+    # def set_all_tasks(self, tasks: list[TaskSchema]):
+    #     # Преобразуем задачи в словари с помощью model_dump и затем в JSON
+    #     tasks_json = [json.dumps(task.model_dump()) for task in tasks]
+    #     # with self.redis as redis:
+    #     #     redis.lpush("tasks", *tasks_json)
+    #     self.redis.lpush("tasks", *tasks_json)  # Убираем with
 
 
+    def set_tasks(self, tasks: list[TaskSchema]):
+        tasks_json = [task.json() for task in tasks]
+        with self.redis as redis:
+            redis.lpush("tasks", *tasks_json)
+
+
+# Павук Марсель
 # class TaskCacheRepository:
 #
 #     def __init__(self, cache_session: AsyncGenerator[Redis, None]) -> None:

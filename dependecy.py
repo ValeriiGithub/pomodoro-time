@@ -1,4 +1,6 @@
 # Dependency
+from fastapi import Depends
+
 from database import get_db_session
 # from cache import get_redis_connection
 from cache import get_redis_connection
@@ -32,12 +34,16 @@ def get_tasks_cache_repository() -> TaskCacheRepository:
     # redis_connection = get_cache_session()      # Асинхронное подключение
     return TaskCacheRepository(redis_connection)
 
-def get_task_service() -> TaskService:
+
+def get_task_service(
+    task_repository: TaskRepository = Depends(get_tasks_repository),
+    task_cache: TaskCacheRepository = Depends(get_tasks_cache_repository),
+) -> TaskService:
     """
     Получаем сервис для работы с тасками
     :return:
     """
     return TaskService(
-        task_repository=get_tasks_repository(),
-        task_cache=get_tasks_cache_repository(),
+        task_repository=task_repository,
+        task_cache=task_cache,
     )

@@ -1,10 +1,23 @@
 from pydantic_settings import BaseSettings
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
 
 
 class Settings(BaseSettings):
+    # PostgreSQL settings
+    DB_HOST: str = '0.0.0.0'
+    DB_PORT: int = 5432
+    DB_USER: str = 'postgres'
+    DB_PASSWORD: str = 'password'
+    DB_NAME: str = 'pomodoro'
+
+    # Redis settings
+    CACH_HOST: str = '0.0.0.0'
+    CACH_PORT: int = 6379
+    CACHE_DB: int = 0
+
+
     # sqlite_db_name: str = '/mnt/c/db/pomodoro.sqlite'
     postgres_db_name: str = 'postgresql+psycopg2://postgres:password@0.0.0.0:5432/pomodoro'
 

@@ -1,3 +1,3 @@
-from task import TaskService
+from service.task import TaskService
 
 __all__ = ['TaskService']

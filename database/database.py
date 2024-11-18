@@ -1,28 +1,23 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from settings import settings
+from typing import Any
 
-# engine = create_engine('sqlite:///' + os.path.join(settings.project_root, settings.sqlite_db_name))
-# engine = create_engine('sqlite:////mnt/c/db/pomodoro.sqlite')       # BD sqlite3
-# engine = create_engine('postgresql+psycopg2://postgres:password@0.0.0.0:5432/pomodoro')       # BD postgresql
-# Используйте атрибут postgres_db_name для создания подключения
-engine = create_engine(settings.db_url)
-
-"""
-
-sqlite:///path/to/database.db
-
-Здесь три слэша (///) означают, что файл находится в файловой системе, а не в сетевом ресурсе.
-
-Первые два слэша (//) указывают на то, что это файл, а не сетевой ресурс. Третий и четвертый слэши (////) необходимы, 
-чтобы указать, что файл находится на диске Windows, доступном через каталог /mnt/ в WSL.
-
-Таким образом, четыре слэша в начале пути позволяют корректно указать путь к файлу базы данных, расположенной 
-на диске Windows, из среды WSL.
-"""
-
-Session = sessionmaker(bind=engine)
+from sqlalchemy.orm import DeclarativeBase, declared_attr
 
 
-def get_db_session() -> Session:
-    return Session
+class Base(DeclarativeBase):
+    """
+    Этот метод определяет имя таблицы в базе данных для каждой модели, наследуемой от Base.
+    Используя декоратор @declared_attr, вы можете динамически задавать имя таблицы на основе имени класса.
+    Например, если вы создаете класс Tasks, то имя таблицы будет автоматически установлено в 'tasks' (все буквы
+    в нижнем регистре). Это упрощает процесс именования таблиц и делает код более чистым.
+
+    Таким образом, этот блок кода создает основу для ваших моделей, обеспечивая автоматическое именование таблиц и позволяя
+    использовать классы, которые могут не иметь явных маппингов.
+    """
+    id: Any
+    __name__: str
+
+    __allow_unmapped__ = True
+
+    @declared_attr
+    def __tablename__(self) -> str:
+        return self.__name__.lower()

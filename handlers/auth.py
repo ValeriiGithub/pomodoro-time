@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from exception import UserNotFoundException, UserNotCorrectPasswordException
 from dependecy import get_auth_service
 from schema import UserLoginSchema, UserCreateSchema
-from service import UserService
+from service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 )
 async def login(
         body: UserCreateSchema,
-        auth_service: Annotated[UserService, Depends(get_auth_service)]
+        auth_service: Annotated[AuthService, Depends(get_auth_service)]
 ):
     # Обработка ошибок
     try:

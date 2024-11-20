@@ -4,7 +4,7 @@ from fastapi import APIRouter, status, Depends
 
 from schema.task import TaskSchema
 from repository import TaskRepository
-from dependecy import get_tasks_repository, get_task_service
+from dependecy import get_tasks_repository, get_task_service, get_request_user_id
 from service import TaskService
 
 router = APIRouter(prefix="/task", tags=["task"])
@@ -29,7 +29,9 @@ async def get_tasks(
 )
 async def create_task(
         task: TaskSchema,
-        task_repository: Annotated[TaskRepository, Depends(get_tasks_repository)]
+        task_repository: Annotated[TaskRepository, Depends(get_tasks_repository)],
+        user_id: int = Depends(get_request_user_id)
+
 ):
     """
     Создает новую задачу с указанным task_id.

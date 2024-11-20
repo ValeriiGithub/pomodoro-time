@@ -4,3 +4,6 @@ class UserNotFoundException(Exception):
 
 class UserNotCorrectPasswordException(Exception):
     detail = "User not correct password"
+
+class TokenExpired(Exception):
+    detail = "Token expired"

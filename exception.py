@@ -7,3 +7,6 @@ class UserNotCorrectPasswordException(Exception):
 
 class TokenExpired(Exception):
     detail = "Token expired"
+
+class TocenNotCorrect(Exception):
+    detail = "Token is not correct"

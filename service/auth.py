@@ -2,10 +2,10 @@ from dataclasses import dataclass
 import datetime as dt
 from datetime import timedelta
 
-from jose import jwt
+from jose import jwt, JWTError
 
 from models import UserProfile
-from exception import UserNotFoundException, UserNotCorrectPasswordException
+from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpired, TocenNotCorrect
 from repository import UserRepository
 from schema import UserLoginSchema
 from settings import Settings
@@ -29,7 +29,6 @@ class AuthService:
         if user.password != password:
             raise UserNotCorrectPasswordException
 
-
     def generate_access_token(self, user_id: int) -> str:
         # Возможный fix baga
         # expire_date = dt.datetime.now(dt.timezone.utc) + timedelta(days=7)  # Expire in 7 days
@@ -41,3 +40,21 @@ class AuthService:
             algorithm=self.settings.JWT_ENCODE_ALGORITHM,
         )
         return token
+
+    def get_user_id_from_access_token(self, access_token: str) -> int:
+        """
+        Получаем user_id из запроса
+
+        :param access_token:
+        :return:
+        """
+        try:
+            payload = jwt.decode(token=access_token, key=self.settings.JWT_SECRET_KEY, algorithms=[
+                self.settings.JWT_ENCODE_ALGORITHM])
+        except JWTError:
+            raise TocenNotCorrect
+
+        if payload['expire'] < dt.datetime.now(dt.timezone.utc):
+            raise TokenExpired
+
+        return payload['user_id']

@@ -5,7 +5,7 @@ from datetime import timedelta
 from jose import jwt, JWTError
 
 from models import UserProfile
-from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpired, TocenNotCorrect
+from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpired, TokenNotCorrect
 from repository import UserRepository
 from schema import UserLoginSchema
 from settings import Settings
@@ -52,7 +52,7 @@ class AuthService:
             payload = jwt.decode(token=access_token, key=self.settings.JWT_SECRET_KEY, algorithms=[
                 self.settings.JWT_ENCODE_ALGORITHM])
         except JWTError:
-            raise TocenNotCorrect
+            raise TokenNotCorrect
 
         if payload['expire'] < dt.datetime.now(dt.timezone.utc):
             raise TokenExpired

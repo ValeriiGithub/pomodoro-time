@@ -1,7 +1,10 @@
 # Dependency
+from http.client import HTTPException
+
 from fastapi import Depends, Request, security, Security
 from sqlalchemy.orm import Session
 
+from exception import TokenExpired, TokenNotCorrect
 from settings import settings
 from database import get_db_session
 from cache import get_redis_connection
@@ -80,7 +83,21 @@ def get_request_user_id(
     :param request:
     :return:
     """
-    user_id = auth_service.get_user_id_from_access_token(token.credentials)
+    try:
+        user_id = auth_service.get_user_id_from_access_token(token.credentials)
+    except TokenExpired as e:
+        raise HTTPException(
+            status_code=401,
+            detail=e.detail,
+        )
+    except TokenNotCorrect as e:
+        raise HTTPException(
+            status_code=401,
+            detail=e.detail,
+        )
+
+
+
     return user_id
 
     # bearer_token = request.headers.get("Authorization")

@@ -1,5 +1,5 @@
 # Dependency
-from fastapi import Depends
+from fastapi import Depends, Request, security, Security
 from sqlalchemy.orm import Session
 
 from settings import settings
@@ -67,3 +67,31 @@ def get_user_service(
         auth_service: AuthService = Depends(get_auth_service),
 ) -> UserService:
     return UserService(user_repository=user_repository, auth_service=auth_service)
+
+
+reusable_oauth2 = security.HTTPBearer()
+
+def get_request_user_id(
+        auth_service: AuthService = Depends(get_auth_service),
+        token: security.http.HTTPAuthorizationCredentials = Security(reusable_oauth2)
+) -> int:
+    """
+    Получаем идентификатор пользователя из заголовка Authorization
+    :param request:
+    :return:
+    """
+    user_id = auth_service.get_user_id_from_access_token(token.credentials)
+    return user_id
+
+    # bearer_token = request.headers.get("Authorization")
+    # if bearer_token:
+    #     access_token_parts = bearer_token.split(" ")
+    #     if len(access_token_parts) == 2:
+    #         token_type, access_token = access_token_parts
+    #         if token_type == "Bearer":
+    #             try:
+    #                 user_id = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])["sub"]
+    #                 return user_id
+    #             except jwt.InvalidTokenError:
+    #                 pass
+    # raise HTTPException(status_code=401, detail="Could not validate credentials")
